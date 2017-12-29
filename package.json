@@ -1,8 +1,13 @@
 {
   "name": "pqp",
   "version": "0.0.1",
-  "private": true,
   "main": "./index.js",
+  "author": "tearsofphoenix@icloud.com",
+  "maintainers": [ "tearsofphoenix <tearsofphoenix@icloud.com>" ],
+  "description": "NodeJS version of libPQP",
+  "keywords": ["Quantum", "Cryptography", "Post-Quantum", "Encrypt", "Decrypt", "PQP"],
+  "license": "ISC",
+  "repository": { "type": "git", "url": "https://github.com/tearsofphoenix/node-pqp.git" },
   "scripts": {
     "build": "npm run build:commonjs && npm run build:es ",
     "build:commonjs": "babel src -d dist/commonjs ",
