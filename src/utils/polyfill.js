@@ -1,151 +1,76 @@
-import nj from 'numjs'
+import {FFT} from 'fftw-js'
 import CryptoJS from 'crypto-js'
 
-nj.NdArray.prototype.nonzero = function() {
-  const result = []
-  this.forEach((val, i) => {
-    if (val != 0) {
-      result.push(i)
-    }
-  })
-  return nj.array(result)
+Float32Array.prototype.fft = function () {
+  const fft = new FFT(this.length)
+  const transform = Float32Array.from(fft.forward(this))
+  fft.dispose()
+  return transform
 }
 
-nj.NdArray.prototype.forEach = function (looper) {
-  if (typeof looper === 'function') {
-    const size = this.size
-    for (let i = 0; i < size; ++i) {
-      looper(this.get(i), i)
-    }
+const scaleTransform = function(trans, size) {
+  let i = 0,
+    bSi = 1.0 / size,
+    x = trans;
+  while(i < x.length) {
+    x[i] *= bSi; i++;
   }
+  return x;
 }
 
-nj.NdArray.prototype.filter = function (looper) {
-  const result = []
-  if (typeof looper === 'function') {
-    this.forEach((val, idx) => {
-      if (looper(val, idx)) {
-        result.push(val)
-      }
-    })
-  }
-  return result
+Float32Array.prototype.ifft = function () {
+  const fft = new FFT(this.length)
+  let temp = Float32Array.from(this)
+  temp = scaleTransform(temp, this.length)
+  const transform = Float32Array.from(fft.inverse(temp))
+  fft.dispose()
+  return transform
 }
 
-nj.NdArray.prototype.map = function (looper) {
-  const result = []
-  if (typeof looper === 'function') {
-    this.forEach((val, idx) => {
-      result.push(looper(val, idx))
-    })
+Float32Array.prototype.complexMultiply = function (other) {
+  const result = new Float32Array(this.length)
+  for (let idx = 0; idx < this.length - 1; idx = idx + 2) {
+    const a = this[idx]
+    const b = this[idx + 1]
+    const c = other[idx]
+    const d = other[idx + 1]
+    result[idx] = a * c - b * d
+    result[idx + 1] = a * d + b * c
   }
   return result
 }
 
-nj.NdArray.prototype.mod = function (num) {
-  this.forEach((val, idx) => this.set(idx, val % num))
-  return this
+Float32Array.prototype.real = function () {
+  return this.filter((value, idx) => idx % 2 === 1)
 }
 
-nj.NdArray.prototype.count = function () {
-  const shape = this.shape
-  return shape[0]
+Float32Array.prototype.round = function () {
+  return this.map(Math.round)
 }
 
-nj.NdArray.prototype.extend = function () {
-  const shape = this.shape
-  if (shape.length === 1) {
-    // 1-dim, need to extend
-    const copy = nj.zeros([shape[0], 2])
-    this.forEach((val, idx) => copy.set(idx, 0, val))
-    return copy
-  }
-  return this
+Float32Array.prototype.mod = function (mod) {
+  return this.map(value => value % mod)
 }
 
-nj.NdArray.prototype.shim = function () {
-  const shape = this.shape
-  if (shape.length === 2 && shape[1] === 2) {
-    // 2-dim, need to shim
-    const count = shape[0]
-    const copy = nj.zeros(count)
-    for (let idx = 0; idx < count; ++idx) {
-      copy.set(idx, this.get(idx, 0))
-    }
-    return copy
-  }
-  return this
+Float32Array.prototype.nonzero = function () {
+  return this.findIndex(value => value != 0)
 }
 
-nj.NdArray.prototype.real = nj.NdArray.prototype.shim
-
-nj.NdArray.prototype.addAt = function (idx, delta) {
-  this.opAt(idx, '+', delta)
+Float32Array.prototype.zeros = function () {
+  return this.findIndex(value => value == 0)
 }
 
-nj.NdArray.prototype.opAt = function (idx, op, delta) {
-  const current = this.get(idx)
-  switch (op) {
-    case '+': {
-      this.set(idx, current + delta)
-      break
-    }
-    case '-': {
-      this.set(idx, current - delta)
-      break
-    }
-    case '*': {
-      this.set(idx, current * delta)
-      break
-    }
-    case '/': {
-      this.set(idx, current / delta)
-      break
-    }
-    case '^': {
-      this.set(idx, current ^ delta)
-      break
-    }
-    default: {
-      break
-    }
-  }
+Float32Array.prototype.multiply = function (number) {
+  return this.map(value => value * number)
 }
 
-nj.NdArray.prototype.complexMultiply = function (other) {
-  const count = this.count()
-  const result = nj.zeros([count, 2])
-  for (let i = 0; i < count; ++i) {
-    const a = this.get(i, 0)
-    const b = this.get(i, 1)
-    const c = other.get(i, 0)
-    const d = other.get(i, 1)
-    result.set(i, 0, a*c - b*d)
-    result.set(i, 1, a*d + b*c)
-  }
-  return result
+Float32Array.prototype.clone = function () {
+  return Float32Array.from(this)
 }
 
-nj.NdArray.prototype.fft = function () {
-  const shape = this.shape
-  if (shape.length === 2 && shape[1] === 2) {
-    //
-    return nj.fft(this)
-  } else {
-    return nj.fft(this.extend())
-  }
+Float32Array.prototype.toArray = function () {
+  return  Array.prototype.slice.call(this)
 }
-
-nj.NdArray.prototype.ifft = function () {
-  const shape = this.shape
-  if (shape.length === 2 && shape[1] === 2) {
-    //
-    return nj.ifft(this)
-  } else {
-    return nj.ifft(this.extend())
-  }
-}
-
 // String
 
 String.prototype.toWordArray = function () {

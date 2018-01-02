@@ -1041,6 +1041,10 @@ falafel@^2.1.0:
     isarray "0.0.1"
     object-keys "^1.0.6"
 
+fftw-js@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/fftw-js/-/fftw-js-0.1.4.tgz#16ad818ff6d2937ce014a5c81bbce5416e025bcf"
+
 filename-regex@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/filename-regex/-/filename-regex-2.0.1.tgz#c1c4b9bee3e09725ddb106b75c1e301fe2f18b26"
@@ -1628,6 +1632,10 @@ node-pre-gyp@^0.6.39, node-pre-gyp@~0.6.28:
     semver "^5.3.0"
     tar "^2.2.1"
     tar-pack "^3.4.0"
+
+node-salsa20@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/node-salsa20/-/node-salsa20-0.0.1.tgz#b14f418bf1d525498729027eefce7d0148e0923c"
 
 nopt@^4.0.1:
   version "4.0.1"

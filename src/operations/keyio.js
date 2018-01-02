@@ -32,7 +32,7 @@ export default class IO {
     priv_key.H_0 = toBitArray(der['H0'])
     priv_key.H_1 = toBitArray(der['H1'])
     priv_key.H_1inv = toBitArray(der['H1inv'])
-    priv_key.block_length = priv_key.H_0.count()
+    priv_key.block_length = priv_key.H_0.length
     return priv_key
   }
 
