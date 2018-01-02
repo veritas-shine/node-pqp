@@ -1,5 +1,5 @@
 import nj from 'numjs'
-import PublicKey from './publick_key'
+import PublicKey from './public_key'
 import RandomGenerator from '../operations/randomgen'
 import {mul_poly} from '../operations/arithmetic'
 

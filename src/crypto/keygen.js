@@ -1,5 +1,5 @@
 import PrivateKey from './private_key'
-import PublicKey from './publick_key'
+import PublicKey from './public_key'
 import RandomGenerator from '../operations/randomgen'
 import {exp_poly, mul_poly} from '../operations/arithmetic'
 import Config from '../utils/config'

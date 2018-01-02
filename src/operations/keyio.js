@@ -2,7 +2,7 @@ import asn from 'asn1.js'
 import BitArray from 'node-bitarray'
 import '../utils/polyfill'
 import PrivateKey from '../crypto/private_key'
-import PublicKey from '../crypto/publick_key'
+import PublicKey from '../crypto/public_key'
 import {toBitArray} from './conversion'
 
 const ASN1PublicKey = asn.define('ASN1PublicKey', function() {
