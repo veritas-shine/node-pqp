@@ -7,7 +7,7 @@ describe('polyfill test', function () {
   it('should compute fft 1', function () {
     const array = Float32Array.from(H0).fft()
     const real = array.real().round()
-    compareArray(real.toArray().slice(0, H0FFT_Real.length), H0FFT_Real)
+    assert.deepEqual(real.toArray().slice(0, H0FFT_Real.length), H0FFT_Real)
   })
 
   it('should compute fft 2', function () {

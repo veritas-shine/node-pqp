@@ -1,4 +1,4 @@
-import { FFT } from 'fftw-js'
+import { FFT, RFFT } from 'fftw-js'
 import CryptoJS from 'crypto-js'
 
 Float32Array.prototype.fft = function () {
@@ -20,12 +20,11 @@ const scaleTransform = function (trans, size) {
   return x;
 }
 
-Float32Array.prototype.ifft = function () {
-  console.log(23, this.length)
-  const fft = new FFT(this.length)
+Float32Array.prototype.ifft = function (length) {
+  const fft = new FFT(length)
   let temp = Float32Array.from(this)
-  temp = scaleTransform(temp, this.length)
-  const transform = fft.inverse(temp).slice(0, this.length)
+  temp = scaleTransform(temp, length)
+  const transform = fft.inverse(temp.slice(0, length)).slice(0, length)
   fft.dispose()
   return transform
 }

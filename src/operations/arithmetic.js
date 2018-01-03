@@ -3,9 +3,10 @@ import '../utils/polyfill'
 import {zeroArray} from './randomgen'
 
 export function mul_poly(x, y) {
+  const length = x.length
   x = x.fft()
   y = y.fft()
-  const temp = x.complexMultiply(y).ifft().round()
+  const temp = x.complexMultiply(y).ifft(length).round()
   return temp
 }
 
@@ -22,7 +23,8 @@ export function square_sparse_poly(x, times=1) {
 }
 
 export function exp_poly(x, n) {
-  let y = zeroArray(x.length)
+  const length = x.length
+  let y = zeroArray(length)
   y[0] = 1
 
   while (n.gt(1)) {
@@ -35,7 +37,7 @@ export function exp_poly(x, n) {
       const X = x.clone().fft()
       const Y = y.clone().fft()
 
-      let temp = X.complexMultiply(Y).ifft()
+      let temp = X.complexMultiply(Y).ifft(length)
       y = temp.round().mod(2)
       x = square_sparse_poly(x)
       n = n.sub(1)
