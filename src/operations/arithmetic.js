@@ -5,8 +5,8 @@ import {zeroArray} from './randomgen'
 export function mul_poly(x, y) {
   x = x.fft()
   y = y.fft()
-  const temp = x.complexMultiply(y).ifft().real()
-  return temp.round().mod(2)
+  const temp = x.complexMultiply(y).ifft().round()
+  return temp
 }
 
 export function square_sparse_poly(x, times=1) {

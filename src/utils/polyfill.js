@@ -2,8 +2,9 @@ import { FFT } from 'fftw-js'
 import CryptoJS from 'crypto-js'
 
 Float32Array.prototype.fft = function () {
-  const fft = new FFT(this.length)
-  const transform = fft.forward(this).slice(0, this.length)
+  let count = this.length
+  const fft = new FFT(count)
+  const transform = Float32Array.from(fft.forward(this))
   fft.dispose()
   return transform
 }
@@ -20,6 +21,7 @@ const scaleTransform = function (trans, size) {
 }
 
 Float32Array.prototype.ifft = function () {
+  console.log(23, this.length)
   const fft = new FFT(this.length)
   let temp = Float32Array.from(this)
   temp = scaleTransform(temp, this.length)
@@ -28,9 +30,38 @@ Float32Array.prototype.ifft = function () {
   return transform
 }
 
+Float32Array.prototype.fftComplexMultiply = function (other) {
+  let length = this.length
+  // normalize to even length
+  if (length % 2 === 1) {
+    length += 1
+  }
+  // result only store the real parts of complex multiply
+  const result = new Float32Array(length)
+  const half = length / 2
+  for (let idx = 0; idx < half; ++idx) {
+    const i = 2 * idx
+    const a = this[i] || 0
+    const b = this[i + 1] || 0
+    const c = other[i] || 0
+    const d = other[i + 1] || 0
+    result[idx] = a * c - b * d
+
+    const jdx = 2 * (half - idx - 1)
+    const m = this[jdx] || 0
+    const n = this[jdx + 1] || 0
+    const p = other[jdx] || 0
+    const q = other[jdx + 1] || 0
+    result[half + idx] = m * p - (-n) * (-q) // because it's conjugated
+  }
+
+  return result
+}
+
 Float32Array.prototype.complexMultiply = function (other) {
-  const result = new Float32Array(this.length)
-  for (let idx = 0; idx < this.length - 1; idx = idx + 2) {
+  const length = this.length
+  const result = new Float32Array(length)
+  for (let idx = 0; idx < length - 1; idx = idx + 2) {
     const a = this[idx]
     const b = this[idx + 1]
     const c = other[idx]
@@ -38,12 +69,15 @@ Float32Array.prototype.complexMultiply = function (other) {
     result[idx] = a * c - b * d
     result[idx + 1] = a * d + b * c
   }
+  if (length % 2 === 1) {
+    result[length - 1] = this[length - 1] * other[length - 1]
+  }
   return result
 }
 
 Float32Array.prototype.real = function () {
   const count = this.length
-  const result = this.filter((value, idx) => idx % 2 === 0)
+  const result = this.filter((value, idx) => idx % 2 === 0 && idx < count - 1)
   let half = Float32Array.from(result)
   half = half.reverse().slice(0, count - result.length)
 
