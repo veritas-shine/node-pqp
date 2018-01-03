@@ -5,7 +5,10 @@ import IO from '../src/operations/keyio'
 import fs from 'fs'
 import path from 'path'
 import BigNumber from 'bignum'
-import { C0, H0, kMulPoly, kMultPolyOrigin } from './example'
+import { C0, H0, H0FFT_Real, kMulPoly, kMulPolyOrigin } from './example'
+import {compareArray} from './helper'
+import Rand from '../src/operations/randomgen'
+import config from '../src/utils/config'
 
 describe('arithmetic test', function () {
   const loader = new IO()
@@ -18,8 +21,14 @@ describe('arithmetic test', function () {
     assert.equal(n.toString(), '17218479456385750618067377696052635483579924745448689921733236816400740691241745619397484537236046173286370919031961587788584927290816661024991609882728717344659503471655990880884679896520055123906467064419056526231345685268240569209892573766037966584735183775739433978714578587782701380797240772477647874555986712746271362892227516205318914435913511141036261376')
   })
 
-  it('should fft', function () {
-    // const result =
+  it('should compute fft', function () {
+    const array = Float32Array.from(H0).fft()
+    const real = array.real().round()
+    assert.deepEqual(real.toArray(), H0FFT_Real)
+  })
+
+  it('should compute reverse fft', function () {
+
   });
 
   it('should mul_poly', function () {
@@ -29,8 +38,9 @@ describe('arithmetic test', function () {
     assert.deepEqual(rc_0.toArray(), C0)
     // console.log(30, rc_0.fft())
     const result = mul_poly(pk.H_0, rc_0)
-    console.log(32, result)
-    assert.deepEqual(result.toArray(), kMultPolyOrigin)
+
+    assert.deepEqual(result.toArray(), kMulPoly)
+    // compareArray(result.toArray(), kMulPolyOrigin)
 
     // const rand = new Rand()
     // const h1 = rand.get_random_weight_vector(config.private_key.length, config.private_key.weight)

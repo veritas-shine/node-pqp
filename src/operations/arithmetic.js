@@ -5,12 +5,12 @@ import {zeroArray} from './randomgen'
 export function mul_poly(x, y) {
   x = x.fft()
   y = y.fft()
-  const temp = x.complexMultiply(y).ifft()
-  return temp.round()
+  const temp = x.complexMultiply(y).ifft().real()
+  return temp.round().mod(2)
 }
 
 export function square_sparse_poly(x, times=1) {
-  let indices = x.nonzero()
+  let indices = Float32Array.from(x.nonzero())
   const mod = x.length
   const result = zeroArray(mod)
   indices = indices.multiply(Math.pow(2, times) % mod)

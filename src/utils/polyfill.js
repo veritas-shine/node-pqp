@@ -1,19 +1,20 @@
-import {FFT} from 'fftw-js'
+import { FFT } from 'fftw-js'
 import CryptoJS from 'crypto-js'
 
 Float32Array.prototype.fft = function () {
   const fft = new FFT(this.length)
-  const transform = Float32Array.from(fft.forward(this))
+  const transform = fft.forward(this).slice(0, this.length)
   fft.dispose()
   return transform
 }
 
-const scaleTransform = function(trans, size) {
+const scaleTransform = function (trans, size) {
   let i = 0,
-    bSi = 1.0 / size,
-    x = trans;
-  while(i < x.length) {
-    x[i] *= bSi; i++;
+      bSi = 1.0 / size,
+      x = trans;
+  while (i < x.length) {
+    x[i] *= bSi;
+    i++;
   }
   return x;
 }
@@ -22,7 +23,7 @@ Float32Array.prototype.ifft = function () {
   const fft = new FFT(this.length)
   let temp = Float32Array.from(this)
   temp = scaleTransform(temp, this.length)
-  const transform = Float32Array.from(fft.inverse(temp))
+  const transform = fft.inverse(temp).slice(0, this.length)
   fft.dispose()
   return transform
 }
@@ -41,11 +42,30 @@ Float32Array.prototype.complexMultiply = function (other) {
 }
 
 Float32Array.prototype.real = function () {
+  const count = this.length
+  const result = this.filter((value, idx) => idx % 2 === 0)
+  let half = Float32Array.from(result)
+  half = half.reverse().slice(0, count - result.length)
+
+  return result.concat(half)
+}
+
+Float32Array.prototype.image = function () {
   return this.filter((value, idx) => idx % 2 === 1)
 }
 
+Float32Array.prototype.concat = function (second) {
+  const firstLength = this.length
+  const result = new Float32Array(firstLength + second.length)
+
+  result.set(this)
+  result.set(second, firstLength)
+
+  return result
+}
+
 Float32Array.prototype.round = function () {
-  return this.map(Math.round)
+  return this.map(value => Math.round(value))
 }
 
 Float32Array.prototype.mod = function (mod) {
@@ -69,8 +89,26 @@ Float32Array.prototype.clone = function () {
 }
 
 Float32Array.prototype.toArray = function () {
-  return  Array.prototype.slice.call(this)
+  return Array.prototype.slice.call(this)
 }
+
+Float32Array.prototype.toPrintString = function () {
+  let result = '['
+  const count = this.length
+  for (let idx = 0; idx < count; ++idx) {
+    if (idx !== count - 1) {
+      result += `${this[idx]}, `
+    } else {
+      result += `${this[idx]} `
+    }
+    if (idx % 25 === 0 && idx > 0) {
+      result += '\n'
+    }
+  }
+  result += ']'
+  return result
+}
+
 // String
 
 String.prototype.toWordArray = function () {

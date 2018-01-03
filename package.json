@@ -38,7 +38,6 @@
     "fftw-js": "^0.1.4",
     "node-bitarray": "^0.1.0",
     "node-salsa20": "^0.0.1",
-    "numjs": "^0.15.1",
     "sprintf-js": "^1.1.1"
   },
   "devDependencies": {
