@@ -8,7 +8,7 @@ function getRandomInt(min, max) {
 
 // fill array of `size` with `0`
 export function zeroArray(size) {
-  const result = new Float32Array(size)
+  const result = new Float64Array(size)
   result.fill(0)
   return result
 }

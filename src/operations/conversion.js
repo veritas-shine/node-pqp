@@ -11,5 +11,5 @@ export function toBitArray(part) {
   const {data, unused} = part
   const bits = BitArray.fromBuffer(data)
   const array = bits.toJSON()
-  return Float32Array.from(array.slice(0, array.length - unused))
+  return Float64Array.from(array.slice(0, array.length - unused))
 }

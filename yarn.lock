@@ -841,6 +841,14 @@ extsprintf@^1.2.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/extsprintf/-/extsprintf-1.4.0.tgz#e2689f8f356fad62cca65a3a91c5df5f9551692f"
 
+fft.js@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/fft.js/-/fft.js-4.0.3.tgz#b0084efa94188febdd1cffe68691f4c85a0fb8cb"
+
+fft@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/fft/-/fft-0.2.1.tgz#1044554fdba1a0b96c4843d5dea8525cab3621aa"
+
 fftw-js@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/fftw-js/-/fftw-js-0.1.4.tgz#16ad818ff6d2937ce014a5c81bbce5416e025bcf"
