@@ -4,14 +4,14 @@ import {zeroArray} from './randomgen'
 
 export function mul_poly(x, y) {
   const length = x.length
-  x = x.fft()
-  y = y.fft()
-  const temp = x.complexMultiply(y).ifft(length).round()
+  const X = x.fft()
+  const Y = y.fft()
+  const temp = X.complexMultiply(Y)
   return temp
 }
 
 export function square_sparse_poly(x, times=1) {
-  let indices = Float32Array.from(x.nonzero())
+  let indices = Float64Array.from(x.nonzero())
   const mod = x.length
   const result = zeroArray(mod)
   indices = indices.multiply(Math.pow(2, times) % mod)

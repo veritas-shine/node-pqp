@@ -8,14 +8,14 @@ function getRandomInt(min, max) {
 
 // fill array of `size` with `0`
 export function zeroArray(size) {
-  const result = new Float32Array(size)
+  const result = new Float64Array(size)
   result.fill(0)
   return result
 }
 
 export default class RandomGenerator {
   get_random_vector(size) {
-    const result = new Float32Array(size)
+    const result = new Float64Array(size)
     for (let i = 0; i < size; i++)
       result[i] = getRandomInt(0, 2)
     return result
