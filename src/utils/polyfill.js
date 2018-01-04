@@ -1,4 +1,4 @@
-import { FFT, RFFT } from './FFTW'
+import { FFT, RFFT } from '../lib/fftw-js'
 import CryptoJS from 'crypto-js'
 
 Float64Array.prototype.fft = function () {
