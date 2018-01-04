@@ -43,6 +43,5 @@ export function exp_poly(x, n) {
       n = n.div(2)
     }
   }
-
   return mul_poly(x, y).round().mod(2)
 }

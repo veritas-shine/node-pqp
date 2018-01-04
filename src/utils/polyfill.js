@@ -50,11 +50,23 @@ Float64Array.prototype.mod = function (mod) {
 }
 
 Float64Array.prototype.nonzero = function () {
-  return this.findIndex(value => value != 0)
+  const result = []
+  this.forEach((value, idx) => {
+    if (value != 0) {
+      result.push(idx)
+    }
+  })
+  return result
 }
 
 Float64Array.prototype.zeros = function () {
-  return this.findIndex(value => value == 0)
+  const result = []
+  this.forEach((value, idx) => {
+    if (value == 0) {
+      result.push(idx)
+    }
+  })
+  return result
 }
 
 Float64Array.prototype.multiply = function (number) {
