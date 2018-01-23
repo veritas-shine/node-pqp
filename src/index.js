@@ -1,4 +1,10 @@
 
-export Protocol from './crypto/protocol'
-export Keygen from './crypto/keygen'
-export IO from './operations/keyio'
+import Protocol from './crypto/protocol'
+import Keygen from './crypto/keygen'
+import IO from './operations/keyio'
+
+export default  {
+  Protocol,
+  Keygen,
+  IO
+}
