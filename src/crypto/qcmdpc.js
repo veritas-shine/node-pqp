@@ -1,4 +1,4 @@
-import nj from 'numjs'
+
 import PublicKey from './public_key'
 import RandomGenerator from '../operations/randomgen'
 import {mul_poly} from '../operations/arithmetic'
@@ -30,9 +30,9 @@ export default class McEliece {
 // non-constant weight to achieve cipertext indistinguishability
     const temp = mul_poly(pub_key.G, m.clone())
     let t = this.randgen.get_random_weight_vector(pub_key.block_length, pub_key.block_error + this.randgen.flip_coin())
-    const v = temp.add(t.shim()).mod(2)
+    const v = temp.add(t).mod(2)
     t = this.randgen.get_random_weight_vector(pub_key.block_length, pub_key.block_error + this.randgen.flip_coin())
-    const u = m.add(t.shim()).mod(2)
+    const u = m.add(t).mod(2)
     return [u, v]
   }
 
@@ -47,22 +47,22 @@ export default class McEliece {
     const H1_ind = this.H_1.nonzero()
 
     const kBL = this.block_length
-    const unsat_H0 = nj.zeros([kBL])
+    const unsat_H0 = Float32Array.createZero(kBL)
     H0_ind.forEach(i => {
-      for (let j = 0; j < synd.count(); ++ j) {
-        if (synd.get(j)) {
+      for (let j = 0; j < synd.length; ++ j) {
+        if (synd[j]) {
           const idx = (j + kBL - i) % kBL
-          unsat_H0.addAt(idx, 1)
+          unsat_H0[idx] += 1
         }
       }
     })
 
-    const unsat_H1 = nj.zeros([kBL])
+    const unsat_H1 = Float32Array.createZero(kBL)
     H1_ind.forEach(i => {
-      for (let j = 0; j < synd.count(); ++ j) {
-        if (synd.get(j)) {
+      for (let j = 0; j < synd.length; ++ j) {
+        if (synd[j]) {
           const idx = (j + kBL - i) % kBL
-          unsat_H1.addAt(idx, 1)
+          unsat_H1[idx] += 1
         }
       }
     })
@@ -96,64 +96,64 @@ export default class McEliece {
 
       // first block sweep
       for (let i = 0; i < kBL; ++i) {
-        if (round_unsat_H0.get(i) <= threshold) {
+        if (round_unsat_H0[i] <= threshold) {
           continue
         }
 
         H0_ind.forEach(j => {
-          const increase = (synd.get((i + j) % kBL) == 0)
+          const increase = (synd[(i + j) % kBL] == 0)
 
           H0_ind.forEach(k => {
             const m = (i + j - k + kBL) % kBL
             if (increase)
-              unsat_H0.addAt(m, 1)
+              unsat_H0[m] += 1
             else
-              unsat_H0.addAt(m, -1)
+              unsat_H0[m] += -1
           })
 
           H1_ind.forEach(k => {
             const m = (i + j - k + kBL) % kBL
             if (increase)
-              unsat_H1.addAt(m, 1)
+              unsat_H1[m] += 1
             else
-              unsat_H1.addAt(m, -1)
+              unsat_H1[m] += -1
 
           })
 
-          synd.opAt((i + j) % kBL, '^', 1)
+          synd[(i + j) % kBL] ^= 1
         })
 
-        c_0.opAt(i, '^', 1)
+        c_0[i] ^= 1
       }
 
       // second block sweep
       for(let i = 0; i < kBL; ++i) {
-        if (round_unsat_H1.get(i) <= threshold) {
+        if (round_unsat_H1[i] <= threshold) {
           continue
         }
 
         H1_ind.forEach(j => {
-          const increase = (synd.get((i + j) % kBL) == 0)
+          const increase = (synd[(i + j) % kBL] == 0)
 
           H0_ind.forEach(k => {
             const m = (i + j - k + kBL) % kBL
             if (increase)
-              unsat_H0.addAt(m, 1)
+              unsat_H0[m] += 1
             else
-              unsat_H0.addAt(m, -1)
+              unsat_H0[m] += -1
           })
 
           H1_ind.forEach(k => {
             const m = (i + j - k + kBL) % kBL
             if(increase)
-              unsat_H1.addAt(m, 1)
+              unsat_H1[m] += 1
             else
-              unsat_H1.addAt(m, -1)
+              unsat_H1[m] += -1
           })
-          synd.opAt((i + j) % kBL, '^', 1)
+          synd[(i + j) % kBL] ^= 1
         })
 
-        c_1.opAt(i, '^', 1)
+        c_1[i] ^= 1
       }
     }
     return c_0

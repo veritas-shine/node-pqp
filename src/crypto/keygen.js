@@ -22,8 +22,8 @@ export default class Keygen {
     const pub_key = new PublicKey()
 
     // set private-key parameters
-    priv_key.H_0 = this.randgen.get_random_weight_vector(this.block_length, this.block_weight).shim()
-    const h1 = this.randgen.get_random_weight_vector(this.block_length, this.block_weight).shim()
+    priv_key.H_0 = this.randgen.get_random_weight_vector(this.block_length, this.block_weight)()
+    const h1 = this.randgen.get_random_weight_vector(this.block_length, this.block_weight)()
     priv_key.H_1inv = exp_poly(h1, BigNumber(2).pow(1200).sub(2))
     priv_key.H_1 = h1
 
@@ -32,7 +32,7 @@ export default class Keygen {
     priv_key.block_error = this.block_error
 
     // set public-key parameters
-    pub_key.G = mul_poly(priv_key.H_0, priv_key.H_1inv).shim()
+    pub_key.G = mul_poly(priv_key.H_0, priv_key.H_1inv)()
 
     pub_key.block_length = this.block_length
     pub_key.block_weight = this.block_weight

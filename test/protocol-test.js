@@ -13,7 +13,7 @@ describe('protocol test', function () {
 
   it('should decrypt', function () {
     const [msg, verified] = protocol.decrypt_message(cipherData)
-    assert.equal(msg, 'hello\n')
+    assert.equal(msg, plainText)
     assert.equal(verified, true)
   })
 
@@ -21,7 +21,7 @@ describe('protocol test', function () {
     protocol.set_public_key(pubKey)
     const cipherText = protocol.encrypt_message(plainText, protocol.pub_key)
     const [msg, verified] = protocol.decrypt_message(cipherText)
-    assert.equal(msg, 'hello\n')
+    assert.equal(msg, plainText)
     assert.equal(verified, true)
   })
 

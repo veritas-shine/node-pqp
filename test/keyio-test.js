@@ -12,20 +12,20 @@ describe('keyio test', function () {
   const exp = new RegExp(/\n/g)
   it('should extract_der_priv_key', function () {
     const pk = loader.extract_der_priv_key(privKey)
-    assert.deepEqual(H0, pk.H_0.tolist())
-    assert.deepEqual(H1, pk.H_1.tolist())
-    assert.deepEqual(H1_inv, pk.H_1inv.tolist())
+    assert.deepEqual(H0, pk.H_0)
+    assert.deepEqual(H1, pk.H_1)
+    assert.deepEqual(H1_inv, pk.H_1inv)
   })
 
   it('should extract pub key', function () {
     const pubk = loader.extract_der_pub_key(pubKey)
-    assert.deepEqual(G, pubk.G.tolist())
+    assert.deepEqual(G, pubk.G)
   })
 
   it('should extract message', function () {
     const msg = loader.extract_der_ciphertext(cipherData)
-    assert.deepEqual(C0, msg[0].tolist())
-    assert.deepEqual(C1, msg[1].tolist())
+    assert.deepEqual(C0, msg[0])
+    assert.deepEqual(C1, msg[1])
     assert.deepEqual(Sym, new Uint8Array(msg[2]))
   })
 
@@ -44,7 +44,7 @@ describe('keyio test', function () {
   it('should gen cipher text', function () {
     const msg = loader.extract_der_ciphertext(cipherData)
     const c1 = loader.get_der_ciphertext(C0, C1, Sym)
-    const c2 = loader.get_der_ciphertext(msg[0].tolist(), msg[1].tolist(), msg[2])
+    const c2 = loader.get_der_ciphertext(msg[0], msg[1], msg[2])
     assert.equal(c1.replace(exp, ''), c2.replace(exp, ''))
   });
 })

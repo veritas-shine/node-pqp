@@ -5,7 +5,7 @@ describe('rand test', function () {
   const rand = new Rand();
   it('should random vector', function () {
     const vec = rand.get_random_vector(1)
-    assert.equal(vec.count(), 1)
+    assert.equal(vec.length, 1)
   })
 
   it('should flip coin', function () {
@@ -16,6 +16,6 @@ describe('rand test', function () {
 
   it('should get weight vector', function () {
     const vec = rand.get_random_weight_vector(10, 3)
-    assert.equal(vec.count(), 10)
+    assert.equal(vec.length, 10)
   });
 })

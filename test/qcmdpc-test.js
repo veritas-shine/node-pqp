@@ -21,17 +21,17 @@ describe('qcmdpc test', function () {
 
   it('should syndrome', function () {
     const result = cipher.syndrome(rc_0, rc_1)
-    const list = result.shim().tolist()
+    const list = result
     assert.deepEqual(syndrome, list)
   })
 
   it('should decrypt', function () {
     const result = cipher.decrypt(rc_0, rc_1)
-    assert.deepEqual(kQCMDPCDecrypt, result.tolist())
+    assert.deepEqual(kQCMDPCDecrypt, result)
   })
 
   it('should pack decrypted token', function () {
-    const result = pack(cipher.decrypt(rc_0, rc_1).tolist())
+    const result = pack(cipher.decrypt(rc_0, rc_1))
     const kToken = '7sf1p5sbQip8MuDkvsxQf2afiAqGO7txt+fQgUNU7KseNkRRxH2Rzz3ykuTGSbXN5okK9TBJ0edc+CZyAR8kmQ=='
     assert.equal(kToken, Base64.stringify(result))
   })

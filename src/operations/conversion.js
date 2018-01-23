@@ -1,6 +1,6 @@
 import CryptoJS from 'crypto-js'
 import BitArray from 'node-bitarray'
-import nj from 'numjs'
+
 // just some packing operation
 export function pack(vec) {
   const data = vec.join('')
@@ -11,5 +11,5 @@ export function toBitArray(part) {
   const {data, unused} = part
   const bits = BitArray.fromBuffer(data)
   const array = bits.toJSON()
-  return nj.array(array.slice(0, array.length - unused))
+  return Float32Array.from(array.slice(0, array.length - unused))
 }
