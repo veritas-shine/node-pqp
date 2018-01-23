@@ -132,6 +132,11 @@ Float32Array.prototype.toPrintString = function () {
   return result
 }
 
+Float32Array.prototype.pack = function () {
+  const data = this.join('')
+  return CryptoJS.SHA512(data)
+}
+
 // String
 
 String.prototype.toWordArray = function () {

@@ -123,7 +123,7 @@ export default class Protocol {
   encrypt_message(message, recv_pub_key) {
 // generate random data
     const randomized = this.randgen.get_random_vector(this.pub_key.block_length)
-    const token = pack(randomized)
+    const token = randomized.pack()
 
     // derive keys
     const keyA = CryptoJS.SHA256(this.append(token, this.saltA)) // just some conversion
@@ -151,7 +151,7 @@ export default class Protocol {
     const [rc_0, rc_1, symmetric_stream] = this.io.extract_der_ciphertext(ciphertext)
 
 // decrypt necessary data
-    const decrypted_token = pack(this.asymmetric_cipher.decrypt(rc_0, rc_1))
+    const decrypted_token = this.asymmetric_cipher.decrypt(rc_0, rc_1).pack()
 
 // derive keys from data
     const decrypted_keyA = CryptoJS.SHA256(this.append(decrypted_token, this.saltA)) // just some conversion
