@@ -40,6 +40,9 @@ describe('polyfill test', function () {
   })
 
   it('should compute inverse fft', function () {
-
+    const array = Float32Array.from(H0).fft()
+    let ta = array.ifft()
+    ta = ta.round()
+    assert.equal(compareArray(ta, H0), true)
   })
 })

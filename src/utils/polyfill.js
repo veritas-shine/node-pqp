@@ -30,22 +30,17 @@ Float32Array.prototype.fft = function () {
   return transform
 }
 
-const scaleTransform = function (trans, size) {
-  let i = 0,
-      bSi = 1.0 / size,
-      x = trans;
-  while (i < x.length) {
-    x[i] *= bSi;
-    i++;
-  }
-  return x;
+function scale(array, scale) {
+  array.forEach((value, index) => array[index] *= scale)
 }
 
-Float32Array.prototype.ifft = function (length) {
-  const fft = new FFT(length)
+Float32Array.prototype.ifft = function () {
+  const length = this.length
+  const realLength = length - 2
+  const fft = new FFT(realLength)
   let temp = Float32Array.from(this)
-  temp = scaleTransform(temp, length)
-  const transform = fft.inverse(temp.slice(0, length)).slice(0, length)
+  scale(temp, 1.0 / realLength)
+  const transform = fft.inverse(temp).slice(0, realLength)
   fft.dispose()
   return transform
 }

@@ -29,7 +29,6 @@ describe('arithmetic test', function () {
     // console.log(30, rc_0.fft())
     const result = mul_poly(pk.H_0, rc_0)
 
-    console.log(result.toPrintString())
     // assert.deepEqual(result.toArray(), kMulPolyOrigin)
     compareArray(result.toArray(), kMulPolyOrigin)
 

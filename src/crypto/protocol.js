@@ -138,7 +138,7 @@ export default class Protocol {
     const [c_0, c_1] = this.asymmetric_cipher.encrypt(recv_pub_key, randomized)
 
     // generate ciphertext
-    return this.io.get_der_ciphertext(c_0(), c_1(), this.symmetric_cipher_enc(message, mac, keyA, iv))
+    return this.io.get_der_ciphertext(c_0, c_1, this.symmetric_cipher_enc(message, mac, keyA, iv))
   }
 
   append(digest, suffix) {
