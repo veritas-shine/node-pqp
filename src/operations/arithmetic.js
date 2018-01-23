@@ -6,7 +6,7 @@ export function mul_poly(x, y) {
   const length = x.length
   x = x.fft()
   y = y.fft()
-  const temp = x.complexMultiply(y).ifft(length).round()
+  const temp = x.complexMultiply(y).ifft(length).round().mod(2)
   return temp
 }
 
