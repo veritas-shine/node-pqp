@@ -39,15 +39,15 @@ export default class IO {
   get_der_priv_key(priv_key) {
     const der = ASN1PrivateKey.encode({
       H0: {
-        data: BitArray.toBuffer(priv_key.H_0.tolist()),
+        data: BitArray.toBuffer(priv_key.H_0),
         unused: 7
       },
       H1: {
-        data: BitArray.toBuffer(priv_key.H_1.tolist()),
+        data: BitArray.toBuffer(priv_key.H_1),
         unused: 7
       },
       H1inv: {
-        data: BitArray.toBuffer(priv_key.H_1inv.tolist()),
+        data: BitArray.toBuffer(priv_key.H_1inv),
         unused: 7
       }
     }, 'pem', {
@@ -60,7 +60,7 @@ export default class IO {
     const der = ASN1PublicKey.decode(seq, 'pem', {label: 'PQP PUBLIC KEY'})
     const pub_key = new PublicKey()
     pub_key.G = toBitArray(der['G'])
-    pub_key.block_length = pub_key.G.count()
+    pub_key.block_length = pub_key.G.length
     return pub_key
   }
 
@@ -68,7 +68,7 @@ export default class IO {
   get_der_pub_key(pub_key) {
     return ASN1PublicKey.encode({
       G: {
-        data: BitArray.toBuffer(pub_key.G.tolist()),
+        data: BitArray.toBuffer(pub_key.G),
         unused: 7
       }
     }, 'pem', {

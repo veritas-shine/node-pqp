@@ -30,20 +30,6 @@ describe('polyfill test', function () {
     assert.deepEqual(result.toArray(), [-1, 3, 3])
   })
 
-  it('should compute complex multiply special for fftw 1', function () {
-    const a = Float32Array.from([1, 1, 1])
-    const b = Float32Array.from([1, 2, 3])
-    const result = a.fftComplexMultiply(b)
-    assert.deepEqual(result.toArray(), [-1, 3, 3, -1])
-  })
-
-  it('should compute complex multiply special for fftw 2', function () {
-    const a = Float32Array.from([1, 1, 1, 1, 1])
-    const b = Float32Array.from([1, 2, 3, 4, 5])
-    const result = a.fftComplexMultiply(b)
-    assert.deepEqual(result.toArray(), [-1, -1, 5, 5, -1, -1])
-  })
-
   it('should compute complex-multiply 2', function () {
     let a = Float32Array.from(H0)
     let b = Float32Array.from(C0)

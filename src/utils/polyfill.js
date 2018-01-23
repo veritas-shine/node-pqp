@@ -1,6 +1,27 @@
 import { FFT, RFFT } from 'fftw-js'
 import CryptoJS from 'crypto-js'
 
+Float32Array.createZero = function (count) {
+  const array = new Float32Array(count)
+  array.fill(0)
+  return array
+}
+
+Float32Array.prototype.add = function (y) {
+  this.forEach((value, index) => this[index] += y[index])
+  return this
+}
+
+Float32Array.prototype.max = function () {
+  let max = this[0]
+  this.forEach(value => {
+    if (value > max) {
+      max = value
+    }
+  })
+  return max
+}
+
 Float32Array.prototype.fft = function () {
   let count = this.length
   const fft = new FFT(count)
@@ -27,34 +48,6 @@ Float32Array.prototype.ifft = function (length) {
   const transform = fft.inverse(temp.slice(0, length)).slice(0, length)
   fft.dispose()
   return transform
-}
-
-Float32Array.prototype.fftComplexMultiply = function (other) {
-  let length = this.length
-  // normalize to even length
-  if (length % 2 === 1) {
-    length += 1
-  }
-  // result only store the real parts of complex multiply
-  const result = new Float32Array(length)
-  const half = length / 2
-  for (let idx = 0; idx < half; ++idx) {
-    const i = 2 * idx
-    const a = this[i] || 0
-    const b = this[i + 1] || 0
-    const c = other[i] || 0
-    const d = other[i + 1] || 0
-    result[idx] = a * c - b * d
-
-    const jdx = 2 * (half - idx - 1)
-    const m = this[jdx] || 0
-    const n = this[jdx + 1] || 0
-    const p = other[jdx] || 0
-    const q = other[jdx + 1] || 0
-    result[half + idx] = m * p - (-n) * (-q) // because it's conjugated
-  }
-
-  return result
 }
 
 Float32Array.prototype.complexMultiply = function (other) {
@@ -106,11 +99,13 @@ Float32Array.prototype.mod = function (mod) {
 }
 
 Float32Array.prototype.nonzero = function () {
-  return this.findIndex(value => value != 0)
-}
-
-Float32Array.prototype.zeros = function () {
-  return this.findIndex(value => value == 0)
+  let indices = []
+  this.forEach((value, index) => {
+    if (value != 0) {
+      indices.push(index)
+    }
+  })
+  return Float32Array.from(indices)
 }
 
 Float32Array.prototype.multiply = function (number) {

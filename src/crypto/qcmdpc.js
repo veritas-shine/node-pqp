@@ -1,4 +1,4 @@
-import nj from 'numjs'
+
 import PublicKey from './public_key'
 import RandomGenerator from '../operations/randomgen'
 import {mul_poly} from '../operations/arithmetic'
@@ -30,9 +30,9 @@ export default class McEliece {
 // non-constant weight to achieve cipertext indistinguishability
     const temp = mul_poly(pub_key.G, m.clone())
     let t = this.randgen.get_random_weight_vector(pub_key.block_length, pub_key.block_error + this.randgen.flip_coin())
-    const v = temp.add(t.shim()).mod(2)
+    const v = temp.add(t).mod(2)
     t = this.randgen.get_random_weight_vector(pub_key.block_length, pub_key.block_error + this.randgen.flip_coin())
-    const u = m.add(t.shim()).mod(2)
+    const u = m.add(t).mod(2)
     return [u, v]
   }
 
@@ -47,9 +47,9 @@ export default class McEliece {
     const H1_ind = this.H_1.nonzero()
 
     const kBL = this.block_length
-    const unsat_H0 = nj.zeros([kBL])
+    const unsat_H0 = Float32Array.createZero(kBL)
     H0_ind.forEach(i => {
-      for (let j = 0; j < synd.count(); ++ j) {
+      for (let j = 0; j < synd.length; ++ j) {
         if (synd.get(j)) {
           const idx = (j + kBL - i) % kBL
           unsat_H0.addAt(idx, 1)
@@ -57,9 +57,9 @@ export default class McEliece {
       }
     })
 
-    const unsat_H1 = nj.zeros([kBL])
+    const unsat_H1 = Float32Array.createZero(kBL)
     H1_ind.forEach(i => {
-      for (let j = 0; j < synd.count(); ++ j) {
+      for (let j = 0; j < synd.length; ++ j) {
         if (synd.get(j)) {
           const idx = (j + kBL - i) % kBL
           unsat_H1.addAt(idx, 1)

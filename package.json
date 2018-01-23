@@ -28,7 +28,7 @@
     "prebuild:es": "rimraf dist/es",
     "prerelease": "cross-env NODE_ENV=production npm run build",
     "prepublish": "cross-env NODE_ENV=production npm run build",
-    "test": "mocha --require babel-core/register --reporter spec test/arithmetic-test.js",
+    "test": "mocha --require babel-core/register --reporter spec test/*-test.js",
     "test-base": "mocha --require babel-core/register --reporter spec test/polyfill-test.js"
   },
   "dependencies": {
